@@ -2,11 +2,9 @@
 GameConfigs = {
                 'ScreenDimensions' : (800, 600),    # Default Screen Width
                 'FrameRate' : 60,                   # Default FrameRate
-                'StartLives' : 9,                  # Default Lives
+                'LoadingImage' : None,              # Loading Screen
+                'StartLives' : 10,                  # Default Lives
                 'StartMoney' : 100,                 # Default Money
-                'LiveImage' : None,                 # Image to show amount of lives
-                'LiveImageDimensions' : (40, 40)    # Dimensions of live image
-              }
-
-# Level Configs
-LevelConfigs = {}
+                'Font' : 'Comic Sans MS',           # Font to use
+                'FontSize' : 35                     # Size of displayed text
+            }

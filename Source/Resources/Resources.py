@@ -6,23 +6,23 @@ import os
 from Source.Archer.ArcherConfig import *
 from Source.Enemy.EnemyConfig import *
 from Source.Game.GameConfig import *
+from Source.Level.LevelConfig import *
 from Source.Projectile.ProjectileConfig import *
 from Source.Tower.TowerConfig import *
 
 class Resources():
 
     def __init__(self):
+        """
+        Initializes resources object
+        """
         pass
 
-    def LoadResources(self):
 
-        self.LoadArcherResources()
-        self.LoadEnemyResources()
-        self.LoadGameResources()
-        self.LoadProjectileResources()
-        self.LoadTowerResources()
-    
     def LoadArcherResources(self):
+        """
+        Loads archer resources
+        """
 
         # Get every archer and respective configurations
         for Name, Configs in ArcherConfigs.items():
@@ -56,7 +56,11 @@ class Resources():
             Images = ShootingImages, StandbyImage
             Configs['Images'] = Images
 
+
     def LoadEnemyResources(self):
+        """
+        Loads enemy resources
+        """
 
         # Get every enemy and respective configurations
         for Name, Configs in EnemyConfigs.items():
@@ -89,12 +93,34 @@ class Resources():
             # Save Images
             Configs['Images'] = Images
 
+
     def LoadGameResources(self):
+        """
+        Loads game resources
+        """
+
+        # Load Loading Image
+        
+        # Image Path Relative to this file
+        ImagePath = "Images/Game/Loading.png"
+
+        # Load from absolute path, remove BG and scale
+        Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
+        Image = pygame.transform.scale(Image, GameConfigs['ScreenDimensions'])
+
+        # Save Image
+        GameConfigs['LoadingImage'] = Image
+    
+
+    def LoadLevelResources(self):
+        """
+        Loads level resources
+        """
 
         # Load Background Images
 
-        # Folder where images are saved
-        ImagePath = "Images/Game/Levels"
+        # Folder where Level images are saved
+        ImagePath = "Images/Level/Levels"
 
         # Go Through every folder in Levels
         for Root, Dirs, Files in os.walk(os.path.join(os.path.dirname(__file__), ImagePath)):
@@ -132,16 +158,20 @@ class Resources():
         # Load Lives image
         
         # Image Path Relative to this file
-        ImagePath = "Images/Game/Lives.png"
+        ImagePath = "Images/Level/Lives.png"
 
         # Load from absolute path, remove BG and scale
         Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
-        Image = pygame.transform.scale(Image, GameConfigs['LiveImageDimensions'])
+        Image = pygame.transform.scale(Image, LevelConfigs['LiveImageDimensions'])
 
         # Save Image
-        GameConfigs['LiveImage'] = Image
+        LevelConfigs['LiveImage'] = Image
+
 
     def LoadProjectileResources(self):
+        """
+        Loads projectile resources
+        """
 
         # Get every projectile and respective configurations
         for Name, Configs in ProjectileConfigs.items():
@@ -156,7 +186,11 @@ class Resources():
             # Save Image
             Configs['Image'] = Image
 
+
     def LoadTowerResources(self):
+        """
+        Loads tower resources
+        """
 
         # Get every Tower and respective configurations
         for Name, Configs in TowerConfigs.items():
