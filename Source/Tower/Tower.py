@@ -1,4 +1,8 @@
-# Required Libs
+############################
+#### Required Libraries ####
+############################
+
+# System libs
 import pygame
 import os
 
@@ -37,25 +41,22 @@ class Tower:
     ####################
     def __init__(self, X, Y, Name):
         """
-        Initialize Tower
+        Initialize tower
         
         Arguments:
-            X {int} -- position of tower center
-            Y {int} -- position of tower center
-            Name {string} -- Tower name
-        
-        Returns:
-            [Projectile] -- Projectile Object
+            X {Integer} -- Position of tower center
+            Y {Integer} -- Position of tower center
+            Name {String} -- Tower name
         """
 
-        # Tower Configs
+        # Tower configs
         self.Configs = TowerConfigs[Name]
 
-        # Tower Position
+        # Tower position
         self.X = X
         self.Y = Y
   
-        # Image Dimensions
+        # Image dimensions
         self.ImageWidth, self.ImageHeight = self.Configs['ImageDimensions']
 
         # Images
@@ -85,20 +86,20 @@ class Tower:
     ######################
     def Update(self, Window, Enemies):
         """
-        Does Necessary actions for each frame
+        Does necessary actions for each frame
         
         Arguments:
-            Window {Pygame Surface} -- Surface to Draw on
-            Enemies {Enemy List} -- List of enemies on the screen
+            Window {Pygame Surface} -- Window to draw on
+            Enemies {List} -- List of enemies on the screen
         """
 
         # Attack
         self.Attack(Enemies)
 
-        # Draw Tower
+        # Draw tower
         self.Draw(Window)
 
-        # Archer Updates
+        # Archer updates
         for Archer in self.Archers:
             Archer.Update(Window)
 
@@ -111,13 +112,13 @@ class Tower:
         Draws tower
         
         Arguments:
-            Window {Pygame Surface} -- Surface to draw on
+            Window {Pygame Surface} -- Window to draw on
         """
         
-        # Select Tower Image
+        # Select tower image
         Image = self.TowerImages[self.Level - 1]
 
-        # Calculate Position
+        # Calculate position
         DrawX = self.X - self.ImageWidth/2
         DrawY = self.Y - self.ImageHeight/2
 
@@ -133,16 +134,16 @@ class Tower:
         Finds closest enemy and sets Archer target
        
         Arguments:
-            Enemies {Enemy List} -- List of enemies currently on the screen
+            Enemies {List} -- List of enemies currently on the screen
         """
 
-        # Find Distance to closest Enemy
+        # Find distance to closest enemy
         SmallestDistance = 999
         Closest = None
 
         for enemy in Enemies:
 
-            # Calculate Distance
+            # Calculate distance
             EnemyDistance = math.sqrt( (self.X - enemy.X)**2 + (self.Y - enemy.Y)**2 )
 
             # Check if closest
@@ -153,7 +154,7 @@ class Tower:
         # Closest enemy in firing range!
         if SmallestDistance < self.Range:
 
-            # Set Archer Target and Attack
+            # Set archer target
             for Archer in self.Archers:
                 Archer.SetEnemy(Closest)
 
@@ -177,7 +178,7 @@ class Tower:
             Y {Integer} -- Y position of click
         
         Returns:
-            [Boolean] -- True if clicked, False otherwise
+            [Boolean] -- True if clicked, false otherwise
         """
 
         # Check if position is within image bounds
@@ -197,6 +198,7 @@ class Tower:
         Returns:
             [Integer] -- Amount of money to give the player when selling a tower
         """
+
         # Return amount of money to give the player
         return self.SellMoney[self.Level - 1]
 
@@ -211,13 +213,14 @@ class Tower:
         Returns:
             [Integer] -- Amount of money upgrade costs, or -1 if already maximum level
         """
-        # If under Maximum Level
+
+        # If under maximum level
         if self.Level < self.MaxLevel:
             
-            # Upgrade Tower Level
+            # Upgrade tower level
             self.Level += 1
             
-            # Return Money
+            # Return money
             return self.BuyMoney[self.Level - 1]
 
         # Can't upgrade because tower is already maximum level
@@ -229,38 +232,38 @@ class Tower:
     #########################
     def AddArcher(self, Name):
         """
-        Adds an Archer to this tower
+        Adds an archer to this tower
         
         Arguments:
             Name {String} -- Name of archer to add
         
         Returns:
-            [Boolean] -- True if Archer added, false if not
+            [Boolean] -- True if archer added, false if not
         """
 
         XTowerTops, YTowerTops = self.Configs['TowerTops']
 
         if len(self.Archers) == 0:
 
-            # Calculate Position
+            # Calculate position
             ArcherX = self.X
             ArcherY = self.Y - (self.ImageHeight/2) + (YTowerTops * self.ImageHeight)
 
         elif len(self.Archers) == 1:
 
-            # Update old Archer Position (Left)
+            # Update old archer position (left)
             ArcherX = self.X - (self.ImageWidth/2) + (XTowerTops * self.ImageWidth)
             ArcherY = self.Y - (self.ImageHeight/2) + (YTowerTops * self.ImageHeight)
             self.Archers[0].Move(ArcherX, ArcherY)
 
-            # New Archer Position (Right)
+            # New Archer position (right)
             ArcherX = self.X + (self.ImageWidth/2) - (XTowerTops * self.ImageWidth)
             ArcherY = self.Y - (self.ImageHeight/2) + (YTowerTops * self.ImageHeight)
 
         else:
             return False
 
-        # Add New Archer with Calculated Position
+        # Add new archer with calculated position
         self.Archers.append(Archer(Name, ArcherX, ArcherY))
         return True
 

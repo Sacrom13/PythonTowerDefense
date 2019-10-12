@@ -1,4 +1,8 @@
-# Required Libs
+############################
+#### Required Libraries ####
+############################
+
+# System libs
 import pygame
 import math
 import os
@@ -30,39 +34,40 @@ class Enemy:
 	####################
     def __init__(self, Name, Path):
         """
-        Initializes an Enemy
+        Initializes an enemy
         
         Arguments:
-            Name {String} -- Name of Enemy
+            Name {String} -- Name of enemy
+            Path {List} -- Points enemy will follow
         """
 
         # Configurations
         self.Configs = EnemyConfigs[Name]
 
-        # Path Enemies will take
+        # Path enemy will take
         self.Path = Path
 
-        # Enemy Position
+        # Enemy position
         self.X = self.Path[0][0]
         self.Y = self.Path[0][1]
 
-        # Enemy Speed
+        # Enemy speed
         self.Velocity = self.Configs['Velocity']
 
-        # Image Selection
+        # Image selection
         self.AnimationCount = 0
 
-        # Image Dimensions
+        # Image dimensions
         self.ImageWidth, self.ImageHeight = self.Configs['ImageDimensions']
 
         # Images
         self.Images = self.Configs['Images']
 
-        # Enemy Health
+        # Enemy health
         self.MaxHealth = self.Configs['MaxHealth']
         self.Health = self.MaxHealth
 
-        # Health Bar
+        # Health bar
         self.HealthBarLength = self.Configs['HealthBarLength']
         self.HealthBarYOffset = self.Configs['HealthBarYOffset']
 
@@ -73,23 +78,23 @@ class Enemy:
 
         for Position in range(len(self.Path)):
 
-            # Starting Point
+            # Starting point
             StartPosition = self.Path[Position]
 
-            # Final Point
+            # Final point
             if Position == (len(self.Path) - 1):
                 EndPosition = (810, self.Path[Position][1])
             else:
                 EndPosition = self.Path[Position + 1]
 
-            # Trajectory Vector
+            # Trajectory vector
             Direction = (EndPosition[0] - StartPosition[0], EndPosition[1] - StartPosition[1])
 
             # Frames required to move between points
             Distance = math.sqrt(Direction[0]**2 + Direction[1]**2)
             NFrames = round(Distance/self.Velocity)
 
-            # Unit Vector
+            # Unit vector
             Direction = (Direction[0]/Distance, Direction[1]/Distance)
 
             # Image type for each frame
@@ -123,17 +128,22 @@ class Enemy:
 	######################
     def Update(self, Window):
         """
-        Does Necessary actions for each frame
+        Does necessary actions for each frame
         
         Arguments:
-            Window {Pygame Surface} -- Surface to Draw on
+            Window {Pygame Surface} -- Window to draw on
         
         Returns:
             [Boolean] -- True if enemy dead, false otherwise
         """
+
+        # Move enemy
         self.Move()
+
+        # Draw required images
         self.Draw(Window)
 
+        # Return if enemy is dead
         return self.Health == 0
 
 
@@ -142,12 +152,16 @@ class Enemy:
 	####################
     def Draw(self, Window):
         """
-        Draws enemy and Health Bar
+        Draws enemy and health bar
         
         Arguments:
-            Window {Pygame Window} -- Surface to draw on 
+            Window {Pygame Surface} -- Window to draw on 
         """
+
+        # Draw enemy
         self.DrawEnemy(Window)
+
+        # Draw health bar
         self.DrawHealthBar(Window)
 
 
@@ -156,20 +170,20 @@ class Enemy:
 	############################
     def DrawEnemy(self, Window):
         """
-        Draws Enemy
+        Draws enemy
 
         Arguments:
-            Window {Pygame Window} -- Surface to draw on
+            Window {Pygame Surface} -- Window to draw on
         """
-        # Select Image
+        # Select image
         Image = self.Images[self.ImageType[self.Position]][self.AnimationCount]
 
-        # Animation Loop
+        # Animation loop
         self.AnimationCount += 1
         if self.AnimationCount == len(self.Images[self.ImageType[self.Position]]):
             self.AnimationCount = 0
         
-        # Calculate Position
+        # Calculate position
         DrawX = self.X - self.ImageWidth/2
         DrawY = self.Y - self.ImageHeight/2
 
@@ -182,23 +196,23 @@ class Enemy:
 	#################################
     def DrawHealthBar(self, Window):
         """
-        Draws Health Bar
+        Draws health bar
         
         Arguments:
-            Window {Pygame Window} -- Surface to draw on
+            Window {Pygame Surface} -- Window to draw on
         """
 
-        # Green Health Bar Length
+        # Green health bar length
         Length = self.Health * round(self.HealthBarLength / self.MaxHealth)
 
-        # Calculate Position
+        # Calculate position
         DrawX = self.X - (self.HealthBarLength/2)
         DrawY = self.Y - (self.ImageHeight/2) - self.HealthBarYOffset
 
-        # Draw Red
+        # Draw red
         pygame.draw.rect(Window, (255, 0, 0), (DrawX, DrawY, self.HealthBarLength, 10), 0)
 
-        # Draw Green
+        # Draw green
         pygame.draw.rect(Window, (0, 255, 0), (DrawX, DrawY, Length, 10), 0)
     
 
@@ -207,14 +221,14 @@ class Enemy:
 	####################x
     def Move(self):
         """
-        Move Enemy
+        Move enemy
         """
 
-        # Calculate new Position
+        # Calculate new position
         self.X += self.Velocity * self.PositionUpdates[self.Position][0]
         self.Y += self.Velocity * self.PositionUpdates[self.Position][1]
 
-        # New position in Updates Vector
+        # New position in update vector
         self.Position += 1
         if(self.Position == len(self.PositionUpdates)):
             self.Position = 0
@@ -229,10 +243,10 @@ class Enemy:
         
         Arguments:
             X {Integer} -- Position to check
-            Y {Integer} -- Position to Check
+            Y {Integer} -- Position to check
         
         Returns:
-            [Boolean] -- True if enemy hit, False otherwise
+            [Boolean] -- True if enemy hit, false otherwise
         """
 
         # Check if position is within image bounds
@@ -247,8 +261,8 @@ class Enemy:
 	###################
     def Hit(self):
         """
-        Removes Health
+        Removes health
         """
 
-        # Decrement Health
-        self.Health = max(self.Health-1, 0)
+        # Decrement Health, but not if already 0
+        self.Health = max(self.Health - 1, 0)

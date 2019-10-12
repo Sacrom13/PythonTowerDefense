@@ -1,4 +1,8 @@
-# Required Libs
+############################
+#### Required Libraries ####
+############################
+
+# System Libs
 import pygame
 import os
 import math
@@ -31,32 +35,32 @@ class Projectile:
     ####################
     def __init__(self, Target, X, Y, Name):
         """
-        Initializes a Projectile
+        Initializes a projectile
         
         Arguments:
             Target {Enemy} -- Enemy projectile was fired at
-            X {Integer} -- Screen Position
-            Y {Integer} -- Screen Position
-            Name {String} -- Projectile Name
+            X {Integer} -- Screen position
+            Y {Integer} -- Screen position
+            Name {String} -- Projectile name
         """
 
-        # Projectile Configurations
+        # Projectile configurations
         self.Configs = ProjectileConfigs[Name]
         
-        # Projectile Position
+        # Projectile position
         self.X = X
         self.Y = Y
 
-        # Projectile Dimensions
+        # Projectile dimensions
         self.ImageWidth, self.ImageHeight = self.Configs['ImageDimensions']
 
         # Image
         self.Image = self.Configs['Image']
 
-        # Target Enemy
+        # Target enemy
         self.Target = Target
 
-        # Projectile Speed
+        # Projectile speed
         self.Speed = self.Configs['Speed']
 
     ######################
@@ -67,19 +71,19 @@ class Projectile:
         Does necessary actions for each frame
         
         Arguments:
-            Window {Pygame Window} -- Surface to draw on
+            Window {Pygame Surface} -- Window to draw on
         
         Returns:
             [Boolean] -- True if projectile hit enemy, false otherwise
         """
 
-        # Move Projectile
+        # Move projectile
         self.Move()
 
-        # Draw Projectile
+        # Draw projectile
         self.Draw(Window)
         
-        # Check if Projectile collided with enemy
+        # Check if projectile collided with enemy
         if self.Target.Collide(self.X, self.Y):
             self.Target.Hit()
             return True
@@ -91,18 +95,18 @@ class Projectile:
     ####################
     def Draw(self, Window):
         """
-        Draws Projectile
+        Draws projectile
         
         Arguments:
-            Window {Pygame Window} -- Surface to Draw on
+            Window {Pygame Surface} -- Window to draw on
         """
 
-        # Select Image
+        # Select image
         Image = self.Image
         if self.Target.X < self.X:
             Image = pygame.transform.flip(Image, True, False)
 
-        # Calculate Position
+        # Calculate position
         DrawX = self.X - self.ImageWidth/2
         DrawY = self.Y - self.ImageHeight/2
 
@@ -114,20 +118,20 @@ class Projectile:
     ####################
     def Move(self):
         """
-        Moves Projectile
+        Moves projectile
         """
 
-        # Projectile and Enemy Positions
+        # Projectile and enemy positions
         CurrentPosition = (self.X, self.Y)
         TargetPosition = (self.Target.X, self.Target.Y)
 
-        # Trajectory Vector
+        # Trajectory vector
         Direction = (TargetPosition[0] - CurrentPosition[0], TargetPosition[1] - CurrentPosition[1])
 
         # Distance between both points
         Distance = math.sqrt(Direction[0]**2 + Direction[1]**2)
 
-        # Unit Vector
+        # Unit vector
         Direction = (Direction[0]/Distance, Direction[1]/Distance)
 
         # Move

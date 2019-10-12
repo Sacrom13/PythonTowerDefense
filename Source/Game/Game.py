@@ -1,4 +1,8 @@
-# Required Libs
+############################
+#### Required Libraries ####
+############################
+
+# System libs
 import pygame
 
 # Game Default Definitions
@@ -25,16 +29,16 @@ class Game:
 		Initializes the game
 		"""
 
-		# Init Pygame
+		# Init pygame
 		pygame.init()
 
-		# Screen Resolution
+		# Screen resolution
 		self.ScreenWidth, self.ScreenHeight = GameConfigs['ScreenDimensions']
 
-		# Init Game Window
+		# Init game window
 		self.Window = pygame.display.set_mode((self.ScreenWidth, self.ScreenHeight))
 
-		# Load Game Resources
+		# Load game resources
 		R = Resources()
 		R.LoadGameResources()
 
@@ -48,14 +52,14 @@ class Game:
 				if Event.type == pygame.QUIT:
 					break
 
-			# Draw Loading screen
+			# Draw loading screen
 			self.Window.blit(GameConfigs['LoadingImage'], (0,0))
 			pygame.display.update()
 
 			pygame.time.Clock().tick(15)
 			Intro += 1
 
-		# Load pygame Font for writing text
+		# Load pygame font for writing text
 		pygame.font.init()
 
 		# Load remaining resources
@@ -85,3 +89,6 @@ class Game:
 	def Run(self):
 		L = Level('1', self.ScreenWidth, self.ScreenHeight, self.Window, self.FrameRate, self.Font, self.Lives, self.Money)
 		L.Run()
+
+		# Stop pygame
+		pygame.quit()

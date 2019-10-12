@@ -1,4 +1,8 @@
-# Required Libs
+############################
+#### Required Libraries ####
+############################
+
+# System libs
 import pygame
 import os
 import time
@@ -28,6 +32,7 @@ from Source.Tower.Tower import *
 #	1.4 - Draw
 #		1.4.1 - Draw Background
 #		1.4.2 - Draw Lives
+#		1.4.3 - Draw Money
 #	1.5 - Delete
 
 
@@ -41,25 +46,27 @@ class Level:
 	####################
 	def __init__(self, Index, ScreenWidth, ScreenHeight, Window, FrameRate, Font, Lives, Money):
 		"""
-		Initializes a Level
+		Initializes a level
 		
 		Arguments:
 			Index {String} -- Which level to run
-			ScreenWidth {Integer} -- Screen Width
-			ScreenHeight {Integer} -- Screen Heigth
+			ScreenWidth {Integer} -- Screen width
+			ScreenHeight {Integer} -- Screen height
+			Window {Pygame Surface} -- Window to draw on
+			FrameRate {Integer} -- Maximum amount of fps game runs at
+			Font {Pygame font} -- Font used to write on screen
 			Lives {Integer} -- Current amount of lives player has
 			Money {Integer} -- Current amount of money player has
-			Font {Pygame Font} -- Font used to write on screen
 		"""
 
-		# Screen Resolution
+		# Screen resolution
 		self.ScreenWidth = ScreenWidth
 		self.ScreenHeight = ScreenHeight
 
 		# Window
 		self.Window = Window
 
-		# Frame Rate
+		# FrameRate
 		self.FrameRate = FrameRate
 
 		# Font to write text with
@@ -70,12 +77,18 @@ class Level:
 
 		# Image to display lives
 		self.LiveImage = LevelConfigs['LiveImage']
-		self.LiveImageWidth, self.LiveImageHeigth = LevelConfigs['LiveImageDimensions']
+		self.LiveImageWidth, self.LiveImageHeight = LevelConfigs['LiveImageDimensions']
+		self.LiveImageXOffset, self.LiveImageYOffset = LevelConfigs['LiveImageDrawOffsets']
 
 		# Money
 		self.Money = Money
 
-		# Enemy Path
+		# Image to display money
+		self.MoneyImage = LevelConfigs['MoneyImage']
+		self.MoneyImageWidth, self.MoneyImageHeight = LevelConfigs['MoneyImageDimensions']
+		self.MoneyImageXOffset, self.MoneyImageYOffset = LevelConfigs['MoneyImageDrawOffsets']
+
+		# Enemy path
 		self.EnemyPath = LevelConfigs[Index]['Path']
 
 		# Enemies
@@ -84,7 +97,7 @@ class Level:
 		# Towers 
 		self.Towers = []
 
-		# Game Background
+		# Game background
 		self.Background = LevelConfigs[Index]['Background']
 
 
@@ -93,7 +106,7 @@ class Level:
 	###################
 	def Run(self):
 		""" 
-		Runs the Level
+		Runs the level
 		"""
 
 		# Setup
@@ -113,13 +126,13 @@ class Level:
 
 		while Run:
 
-			# Count Frames
+			# Cap amount of fps
 			Clock.tick(self.FrameRate)
 
-			# Handle Events
+			# Handle events
 			for Event in pygame.event.get():
 
-				# Get out of Level loop
+				# Get out of level loop
 				if Event.type == pygame.QUIT:
 					Run = False			
 
@@ -128,15 +141,13 @@ class Level:
 				if Event.type == pygame.MOUSEBUTTONDOWN:
 					pass
 			
-			# Add Enemies randomly, for now
+			# Add enemies randomly, for now
 			if time.time() - timer >= random.randrange(2, 3):
 				timer = time.time()
 				self.Enemies.append(Enemy('Arcanine', self.EnemyPath))
 
+			# Update everything
 			self.Update()
-
-		# Stop Pygame
-		pygame.quit()
 
 
 	######################
@@ -147,16 +158,16 @@ class Level:
 		# Draw what needs to be drawn
 		self.Draw()
 
-		# Update Enemies
+		# Update enemies
 		for Enemy in self.Enemies:
 			if Enemy.Update(self.Window):
 				self.Enemies.remove(Enemy)
 
-		# Update Towers
+		# Update towers
 		for Tower in self.Towers:
 			Tower.Update(self.Window, self.Enemies)
 
-		# Delete Enemies from the screen
+		# Delete enemies from the screen
 		self.Delete()
 
 		# Update pygame window
@@ -167,16 +178,29 @@ class Level:
 	#### 1.4 - Draw ####
 	######################
 	def Draw(self):
+		"""
+		Draws everything required by the game
+		"""
+
+		# Draw background
 		self.DrawBackground()
+
+		# Draw lives
 		self.DrawLives()
+
+		# Draw money
+		self.DrawMoney()
 
 
 	################################
 	#### 1.4.1 - DrawBackground ####
 	################################
 	def DrawBackground(self):
-		
-		# Draw Background
+		"""
+		Draws level background
+		"""
+
+		# Draw background
 		self.Window.blit(self.Background, (0,0))
 
 
@@ -184,22 +208,45 @@ class Level:
 	#### 1.4.2 - Draw Lives ####
 	############################
 	def DrawLives(self):
-		
-		# Offset so lives aren't exactly on the edge
-		Offset = 10			
+		"""
+		Draws live image and amount of lives on screen
+		"""
 
 		# Draw Image on top right
-		DrawX = self.ScreenWidth - self.LiveImageWidth - Offset
-		DrawY = Offset
+		DrawX = self.ScreenWidth - self.LiveImageWidth - self.LiveImageXOffset
+		DrawY = self.LiveImageYOffset
 
 		self.Window.blit(self.LiveImage, (DrawX, DrawY))
 
-		# Draw Amount of Lives
+		# Draw Amount of lives
 		TextDimensions = self.Font.size(str(self.Lives))
 		TextSurface = self.Font.render(str(self.Lives), False, (0, 0, 0))
 
 		DrawX += math.floor((self.LiveImageWidth - TextDimensions[0])/2)
-		DrawY += math.floor((self.LiveImageHeigth - TextDimensions[1])/2)
+		DrawY += math.floor((self.LiveImageHeight - TextDimensions[1])/2)
+		self.Window.blit(TextSurface, (DrawX, DrawY))
+
+
+	############################
+	#### 1.4.3 - Draw Money ####
+	############################
+	def DrawMoney(self):
+		"""
+		Draws money image and amount of money on screen
+		"""
+
+		# Draw Image on top right, below lives
+		DrawX = self.ScreenWidth - self.MoneyImageWidth - self.MoneyImageXOffset
+		DrawY = self.MoneyImageYOffset
+
+		self.Window.blit(self.MoneyImage, (DrawX, DrawY))
+
+		# Draw Amount of Money
+		TextDimensions = self.Font.size(str(self.Money))
+		TextSurface = self.Font.render(str(self.Money), False, (0, 0, 0))
+
+		DrawX += math.floor((self.MoneyImageWidth - TextDimensions[0])/2)
+		DrawY += math.floor((self.MoneyImageHeight - TextDimensions[1])/2)
 		self.Window.blit(TextSurface, (DrawX, DrawY))
 
 
@@ -211,7 +258,10 @@ class Level:
 		Deletes enemies who are offscreen
 		"""
 
+		# Check every enemy
 		for Enemy in self.Enemies:
+
+			# If offscreen remove lives and delete enemy
 			if(Enemy.X > self.ScreenWidth):
 				self.Lives -= 1
 				self.Enemies.remove(Enemy)

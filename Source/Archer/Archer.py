@@ -38,7 +38,7 @@ class Archer():
     ####################
     def __init__(self, Name, X, Y):
         """
-        Initializes an Archer
+        Initializes an archer
         
         Arguments:
             Name {String} -- Archer name
@@ -53,22 +53,22 @@ class Archer():
         self.X = X
         self.Y = Y
 
-        # Image Dimensions
+        # Image dimensions
         self.ImageWidth, self.ImageHeight = self.Configs['ImageDimensions']
 
         # Images
         self.ShootingImages, self.StandbyImage = self.Configs['Images']
 
-        # Image Selection
+        # Image selection
         self.AnimationCount = 0
 
-        # Enemy Archer is attacking
+        # Enemy archer is attacking
         self.Enemy = None
 
-        # Fire Rate
+        # FireRate
         self.FireRate = self.Configs['FireRate']
 
-        # Projectiles fired by this Archer
+        # Projectiles fired by this archer
         self.Projectiles = []
 
 
@@ -80,19 +80,19 @@ class Archer():
         Does necessary actions for each frame
         
         Arguments:
-            Window {Pygame Surface} -- Window to draw on
+            Window {Pygame surface} -- Window to draw on
         """
 
         # Attack
         self.Attack()
 
-        # Draw Archer
+        # Draw archer
         self.Draw(Window)
 
         # Active projectiles
         for Projectile in self.Projectiles:
 
-            # Update Projectiles
+            # Update projectiles
             if Projectile.Update(Window):
 
                 # Remove if projectile reached target enemy
@@ -104,19 +104,19 @@ class Archer():
     #################### 
     def Draw(self, Window):
         """
-        Draws Archer
+        Draws archer
         
         Arguments:
-            Window {Pygame Surface} -- Surface to Draw On
+            Window {Pygame Surface} -- Window to draw on
         """
 
-        # Select Attacking Image if enemy is in range
+        # Select attacking image if enemy is in range
         if self.Enemy is not None:
             
-            # Select Image
+            # Select image
             Image = self.ShootingImages[self.AnimationCount // self.FireRate]
             
-            # Animation Loop
+            # Animation loop
             self.AnimationCount += 1
             if self.AnimationCount == len(self.ShootingImages * self.FireRate):
                 self.AnimationCount = 0
@@ -125,16 +125,16 @@ class Archer():
             if self.Enemy.X < self.X:
                 Image = pygame.transform.flip(Image, True, False)
 
-        # Select Standby image if no enemies in range
+        # Select standby image if no enemies in range
         else:
             Image = self.StandbyImage
             self.AnimationCount = 0
 
-        # Calculate Position
+        # Calculate position
         DrawX = self.X - self.ImageWidth/2
         DrawY = self.Y - self.ImageHeight/2
 
-        # Draw Archer
+        # Draw archer
         Window.blit(Image, (DrawX, DrawY))
 
 
@@ -145,6 +145,8 @@ class Archer():
         """
         Attacks nearest enemy
         """
+
+        # Only create new projectile if on first animation frame and enemy exists
         if self.AnimationCount == 0 and self.Enemy is not None:
             self.Projectiles.append(Projectile(self.Enemy, self.X, self.Y, self.Configs['Projectile']))
 
@@ -154,11 +156,13 @@ class Archer():
     ########################
     def SetEnemy(self, Enemy):
         """
-        Sets Enemy
+        Sets enemy
         
         Arguments:
             Enemy {Enemy} -- Enemy to set
         """
+
+        # Set target enemy
         self.Enemy = Enemy
 
     
@@ -167,11 +171,13 @@ class Archer():
     ####################
     def Move(self, X, Y):
         """
-        Moves Archer
+        Moves archer
         
         Arguments:
             X {Integer} -- X position
             Y {Integer} -- Y position
         """
+
+        # Set new archer position
         self.X = X
         self.Y = Y
