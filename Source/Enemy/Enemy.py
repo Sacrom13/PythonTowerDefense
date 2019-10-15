@@ -6,6 +6,7 @@
 import pygame
 import math
 import os
+import random
 
 # Enemy Default Definitions
 from Source.Enemy.EnemyConfig import *
@@ -76,16 +77,27 @@ class Enemy:
         self.PositionUpdates = []
         self.ImageType = []
 
-        for Position in range(len(self.Path)):
+        # Pixel deviation so enemies don't stack
+        Deviation = self.Configs['Deviation']
+
+        # Add random deviation to first path point as its not done in the for loop
+        NewX = self.Path[0][0] + random.randint(-Deviation, Deviation)
+        NewY = self.Path[0][1] + random.randint(-Deviation, Deviation)
+        self.Path[0] = NewX, NewY
+
+        # Calculate Movement updates
+        for Position in range(len(self.Path) - 1):
+
+            # Add random deviation to path points
+            NewX = self.Path[Position + 1][0] + random.randint(-Deviation, Deviation)
+            NewY = self.Path[Position + 1][1] + random.randint(-Deviation, Deviation)
+            self.Path[Position + 1] = NewX, NewY
 
             # Starting point
             StartPosition = self.Path[Position]
 
             # Final point
-            if Position == (len(self.Path) - 1):
-                EndPosition = (810, self.Path[Position][1])
-            else:
-                EndPosition = self.Path[Position + 1]
+            EndPosition = self.Path[Position + 1]
 
             # Trajectory vector
             Direction = (EndPosition[0] - StartPosition[0], EndPosition[1] - StartPosition[1])

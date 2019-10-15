@@ -13,7 +13,8 @@ Configuration = {
                 'HealthBarYOffset' : 10,                                # Health bar offset in y plane
                 'MaxHealth' : 5,                                        # Max amount of health
                 'Velocity' : 5,                                         # Speed
-                'Images' : None                                         # Images, which are loaded seperately
+                'Images' : None,                                        # Images, which are loaded seperately
+                'Deviation' : 5                                         # Pixel deviation to make enemies not stack
                 }
 
 EnemyConfigs['Arcanine'] = Configuration

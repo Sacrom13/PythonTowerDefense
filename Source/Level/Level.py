@@ -34,6 +34,7 @@ from Source.Tower.Tower import *
 #		1.4.2 - Draw Lives
 #		1.4.3 - Draw Money
 #	1.5 - Delete
+#	1.6 - Handle Button Press
 
 
 ##################
@@ -132,14 +133,14 @@ class Level:
 			# Handle events
 			for Event in pygame.event.get():
 
-				# Get out of level loop
+				# Get out of level loop if user closes game
 				if Event.type == pygame.QUIT:
 					Run = False			
 
-				# Not neccesary for now
-				pos = pygame.mouse.get_pos()
+				# Check if something's been clicked
+				MousePos = pygame.mouse.get_pos()
 				if Event.type == pygame.MOUSEBUTTONDOWN:
-					pass
+					self.HandleButtonPress(MousePos[0], MousePos[1])
 			
 			# Add enemies randomly, for now
 			if time.time() - timer >= random.randrange(2, 3):
@@ -149,6 +150,10 @@ class Level:
 			# Update everything
 			self.Update()
 
+			# Check if Game over
+			if self.Lives == 0:
+				Run = False
+				
 
 	######################
 	#### 1.3 - Update ####
@@ -160,8 +165,17 @@ class Level:
 
 		# Update enemies
 		for Enemy in self.Enemies:
+
+			# Delete if dead
 			if Enemy.Update(self.Window):
 				self.Enemies.remove(Enemy)
+			
+				# Delete projectiles because target died
+				for Tower in self.Towers:
+					for Archer in Tower.Archers:
+						for Projectile in Archer.Projectiles:
+							if Projectile.Target == Enemy:
+								Projectile.Target = None
 
 		# Update towers
 		for Tower in self.Towers:
@@ -263,5 +277,23 @@ class Level:
 
 			# If offscreen remove lives and delete enemy
 			if(Enemy.X > self.ScreenWidth):
-				self.Lives -= 1
+				self.Lives = max(self.Lives - 1, 0)
 				self.Enemies.remove(Enemy)
+
+
+	#################################
+	#### 1.6 - HandleButtonPress ####
+	#################################	
+	def HandleButtonPress(self, X, Y):
+		"""
+		Does necessary actions when user clicks on screen
+		
+		Arguments:
+			X {Integer} -- Click position
+			Y {Integer} -- Click position
+		"""
+
+		# Check if tower has been clicked
+		for Tower in self.Towers:
+			if Tower.Click(X, Y):
+				break

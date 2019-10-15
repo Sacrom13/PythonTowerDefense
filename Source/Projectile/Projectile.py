@@ -74,15 +74,19 @@ class Projectile:
             Window {Pygame Surface} -- Window to draw on
         
         Returns:
-            [Boolean] -- True if projectile hit enemy, false otherwise
+            [Boolean] -- True if projectile hit enemy or enemy died, false otherwise
         """
+
+        # Check if enemy died
+        if self.Target == None:
+            return True
 
         # Move projectile
         self.Move()
 
         # Draw projectile
         self.Draw(Window)
-        
+
         # Check if projectile collided with enemy
         if self.Target.Collide(self.X, self.Y):
             self.Target.Hit()

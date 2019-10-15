@@ -184,6 +184,7 @@ class Tower:
         # Check if position is within image bounds
         if X >= self.X and X <= self.X + self.ImageWidth:
             if Y >= self.Y and Y <= self.Y + self.ImageHeight:
+                self.Selected = True
                 return True
         return False
 
