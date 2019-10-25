@@ -31,8 +31,9 @@ from Source.Tower.Tower import *
 #	1.3 - Update
 #	1.4 - Draw
 #		1.4.1 - Draw Background
-#		1.4.2 - Draw Lives
-#		1.4.3 - Draw Money
+#		1.4.2 - Draw Sidebar
+#		1.4.3 - Draw Lives
+#		1.4.4 - Draw Money
 #	1.5 - Delete
 #	1.6 - Handle Button Press
 
@@ -45,14 +46,14 @@ class Level:
 	####################
 	#### 1.1 - Init ####
 	####################
-	def __init__(self, Index, ScreenWidth, ScreenHeight, Window, FrameRate, Font, Lives, Money):
+	def __init__(self, Index, GameWidth, GameHeight, Window, FrameRate, Font, Lives, Money):
 		"""
 		Initializes a level
 		
 		Arguments:
 			Index {String} -- Which level to run
-			ScreenWidth {Integer} -- Screen width
-			ScreenHeight {Integer} -- Screen height
+			GameWidth {Integer} - Size of entire screen
+			GameHeight {Integer} - Size of entire screen
 			Window {Pygame Surface} -- Window to draw on
 			FrameRate {Integer} -- Maximum amount of fps game runs at
 			Font {Pygame font} -- Font used to write on screen
@@ -60,9 +61,12 @@ class Level:
 			Money {Integer} -- Current amount of money player has
 		"""
 
-		# Screen resolution
-		self.ScreenWidth = ScreenWidth
-		self.ScreenHeight = ScreenHeight
+		# Screen Resolution
+		self.GameWidth = GameWidth
+		self.GameHeight = GameHeight
+
+		# Background level resolution
+		self.ScreenWidth, self.ScreenHeight = LevelConfigs['LevelDimensions']
 
 		# Window
 		self.Window = Window
@@ -88,6 +92,9 @@ class Level:
 		self.MoneyImage = LevelConfigs['MoneyImage']
 		self.MoneyImageWidth, self.MoneyImageHeight = LevelConfigs['MoneyImageDimensions']
 		self.MoneyImageXOffset, self.MoneyImageYOffset = LevelConfigs['MoneyImageDrawOffsets']
+
+		# Sidebar texture
+		self.SidebarTexture = LevelConfigs['SidebarTexture']
 
 		# Enemy path
 		self.EnemyPath = LevelConfigs[Index]['Path']
@@ -199,6 +206,9 @@ class Level:
 		# Draw background
 		self.DrawBackground()
 
+		# Draw Sidebar
+		self.DrawSideBar()
+
 		# Draw lives
 		self.DrawLives()
 
@@ -218,8 +228,20 @@ class Level:
 		self.Window.blit(self.Background, (0,0))
 
 
+	#############################
+	#### 1.4.2 - DrawSideBar ####
+	#############################
+	def DrawSideBar(self):
+		"""
+		Draw sidebar texture to right of background
+		"""
+
+		# Draw sidebar
+		self.Window.blit(self.SidebarTexture, (self.ScreenWidth, 0))
+
+
 	############################
-	#### 1.4.2 - Draw Lives ####
+	#### 1.4.3 - Draw Lives ####
 	############################
 	def DrawLives(self):
 		"""
@@ -227,7 +249,7 @@ class Level:
 		"""
 
 		# Draw Image on top right
-		DrawX = self.ScreenWidth - self.LiveImageWidth - self.LiveImageXOffset
+		DrawX = self.GameWidth - (self.GameWidth - self.ScreenWidth)/2 - self.LiveImageWidth/2
 		DrawY = self.LiveImageYOffset
 
 		self.Window.blit(self.LiveImage, (DrawX, DrawY))
@@ -242,7 +264,7 @@ class Level:
 
 
 	############################
-	#### 1.4.3 - Draw Money ####
+	#### 1.4.4 - Draw Money ####
 	############################
 	def DrawMoney(self):
 		"""
@@ -250,7 +272,7 @@ class Level:
 		"""
 
 		# Draw Image on top right, below lives
-		DrawX = self.ScreenWidth - self.MoneyImageWidth - self.MoneyImageXOffset
+		DrawX = self.GameWidth - (self.GameWidth - self.ScreenWidth)/2 - self.MoneyImageWidth/2
 		DrawY = self.MoneyImageYOffset
 
 		self.Window.blit(self.MoneyImage, (DrawX, DrawY))

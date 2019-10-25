@@ -1,6 +1,6 @@
 # Game Configurations
 GameConfigs = {
-                'ScreenDimensions' : (800, 600),    # Default screen width
+                'ScreenDimensions' : (900, 600),    # Default screen width
                 'FrameRate' : 60,                   # Default framerate
                 'LoadingImage' : None,              # Loading screen
                 'StartLives' : 10,                  # Default lives

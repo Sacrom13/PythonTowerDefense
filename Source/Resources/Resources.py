@@ -165,7 +165,7 @@ class Resources():
 
                 # Load Background from absolute path, remove background and scale
                 Image = pygame.image.load(os.path.join(Root, Dir + '/Background.png')).convert_alpha()
-                Image = pygame.transform.scale(Image, GameConfigs['ScreenDimensions'])
+                Image = pygame.transform.scale(Image, LevelConfigs['LevelDimensions'])
 
                 # Save image
                 Configuration['Background'] = Image
@@ -192,21 +192,21 @@ class Resources():
         #### Load Lives Image ####
         ##########################
         
-        # Image Path Relative to this file
+        # Image path relative to this file
         ImagePath = "Images/Level/Lives.png"
 
         # Load from absolute path, remove BG and scale
         Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
         Image = pygame.transform.scale(Image, LevelConfigs['LiveImageDimensions'])
 
-        # Save Image
+        # Save image
         LevelConfigs['LiveImage'] = Image
 
         ##########################
         #### Load Money Image ####
         ##########################
 
-        # Image Path Relative to this file
+        # Image path relative to this file
         ImagePath = "Images/Level/Money.png"
 
         # Load from absolute path, remove BG and scale
@@ -215,6 +215,24 @@ class Resources():
 
         # Save Image
         LevelConfigs['MoneyImage'] = Image
+
+        ############################
+        #### Load Sidebar Image ####
+        ############################
+
+        # Image path relative to this file
+        ImagePath = "Images/Level/SidebarBackground.png"
+
+        # Calculate sidebar dimensions
+        SidebarDimensions = GameConfigs['ScreenDimensions'][0] - LevelConfigs['LevelDimensions'][0]
+        print(SidebarDimensions)
+
+        # Load from absolute path, remove BG and scale
+        Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
+        Image = pygame.transform.scale(Image, (SidebarDimensions, GameConfigs['ScreenDimensions'][1]))
+
+        # Save Image
+        LevelConfigs['SidebarTexture'] = Image
         
 
     ##############################
@@ -250,6 +268,10 @@ class Resources():
         # Get every tower and respective configurations
         for Name, Configs in TowerConfigs.items():
 
+            ###########################
+            #### Load Tower Images ####
+            ###########################
+
             Images = []
 
             for i in range(Configs['MaxLevel']):
@@ -265,4 +287,18 @@ class Resources():
 
             # Save
             Configs['Images'] = Images
+
+            ############################
+            #### Load Button Images ####
+            ############################
+
+            # Image path relative to this file
+            ImagePath = "Images/Tower/" + Name + "/Button.png"
+
+            # Load from absolute path, remove background and scale
+            Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
+            Image = pygame.transform.scale(Image, Configs['ButtonImageDimensions'])
+
+            # Save image
+            Configs['ButtonImage'] = Image
 

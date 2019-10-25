@@ -13,7 +13,9 @@ Configuration = {
                 'SellMoney' : [0, 0, 0],            # How much tower sells for
                 'BuyMoney' : [0, 0, 0],             # How much tower costs to buy
                 'Range' : 100,                      # Tower range
-                'Images' : None                     # Image, loaded separately
+                'Images' : None,                    # Image, loaded separately
+                'ButtonImage' : None,               # Button image to display on sidebar
+                'ButtonImageDimensions' : (33, 33)  # Button image dimensions
                 }
 
 TowerConfigs['Wood'] = Configuration
