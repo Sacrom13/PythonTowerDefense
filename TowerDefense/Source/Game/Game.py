@@ -70,8 +70,7 @@ class Game:
 		pygame.font.init()
 
 		# Load remaining resources
-		R.LoadButtonResources()
-		R.LoadLevelResources()
+		R.LoadRemainingResources()
 
 		# Lives
 		self.Lives = GameConfigs['StartLives']
@@ -96,11 +95,11 @@ class Game:
 		"""
 
 		# Setup, for now
-		L = Level('1', self.ScreenDimensions, self.Window, self.FrameRate, self.Font, self.Lives, self.Money)
-		L.Run()
+		# L = Level('1', self.ScreenDimensions, self.Window, self.FrameRate, self.Font, self.Lives, self.Money)
+		# L.Run()
 
-		#E = Editor(self.ScreenDimensions, self.Window, self.FrameRate, self.Font)
-		#E.Run()
+		E = Editor(self.ScreenDimensions, self.Window, self.FrameRate, self.Font)
+		E.Run()
 
 		# Stop pygame
 		pygame.quit()

@@ -6,15 +6,17 @@
 import pygame
 import os
 
-# Configuration file
+# Configuration file for this class
 from Source.Config.ResourceConfig import *
+
+# Game Resources
+from Source.Config.GameConfig import *
 
 # Configuration files from remaining classes
 from Source.Config.ArcherConfig import *
 from Source.Config.ButtonConfig import *
 from Source.Config.EditorConfig import *
 from Source.Config.EnemyConfig import *
-from Source.Config.GameConfig import *
 from Source.Config.LevelConfig import *
 from Source.Config.ProjectileConfig import *
 from Source.Config.TileConfig import *
@@ -26,14 +28,16 @@ from Source.Config.TowerConfig import *
 
 # 1 - Resources
 # 	1.1 - Init
-#   1.2 - LoadArcherResources
-#   1.3 - LoadButtonResources
-#   1.4 - LoadEditorResources
-#   1.5 - LoadEnemyResources
-#   1.6 - LoadGameResources
-#   1.7 - LoadLevelResources
-#   1.8 - LoadProjectileResources
-#   1.9 - LoadTowerResources
+#   1.2 - LoadGameResources
+#   1.3 - LoadRemainingResources
+#       1.3.1 - LoadArcherResources
+#       1.3.2 - LoadButtonResources
+#       1.3.3 - LoadEditorResources
+#       1.3.4 - LoadEnemyResources
+#       1.3.5 - LoadLevelResources
+#       1.3.6 - LoadProjectileResources
+#       1.3.7 - LoadTileResources
+#       1.3.8 - LoadTowerResources
 
 
 #######################
@@ -50,10 +54,49 @@ class Resources():
         """
         pass
 
+    
+    #################################
+    #### 1.2 - LoadGameResources ####
+    #################################
+    def LoadGameResources(self):
+        """
+        Loads resources for game class
+        """
 
-    ###################################
-    #### 1.2 - LoadArcherResources ####
-    ###################################
+        # Load loading image
+        
+        # Image path relative to this file
+        ImagePath = "Images/Game/Loading.png"
+
+        # Load from absolute path, remove background and scale
+        Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
+        Image = pygame.transform.scale(Image, GameConfigs['ScreenDimensions'])
+
+        # Save image
+        GameConfigs['LoadingImage'] = Image
+
+    ######################################
+    #### 1.3 - LoadRemainingResources ####
+    ######################################
+    def LoadRemainingResources(self):
+        """
+        Loads resources for every class except game
+        """
+        
+        # Load resources
+        self.LoadArcherResources()
+        self.LoadButtonResources()
+        self.LoadEditorResources()
+        self.LoadEnemyResources()
+        self.LoadLevelResources()
+        self.LoadProjectileResources()
+        self.LoadTileResources()
+        self.LoadTowerResources()
+
+
+    #####################################
+    #### 1.3.1 - LoadArcherResources ####
+    #####################################
     def LoadArcherResources(self):
         """
         Loads archer resources
@@ -92,9 +135,9 @@ class Resources():
             Configs['Images'] = Images
 
 
-    ###################################
-    #### 1.3 - LoadButtonResources ####
-    ###################################
+    #####################################
+    #### 1.3.2 - LoadButtonResources ####
+    #####################################
     def LoadButtonResources(self):
         """
         Loads resources for button class
@@ -102,9 +145,9 @@ class Resources():
         pass
     
 
-    ###################################
-    #### 1.4 - LoadEditorResources ####
-    ###################################
+    #####################################
+    #### 1.3.3 - LoadEditorResources ####
+    #####################################
     def LoadEditorResources(self):
         """
         Loads resources for editor class
@@ -112,9 +155,9 @@ class Resources():
         pass
 
 
-    ##################################
-    #### 1.5 - LoadEnemyResources ####
-    ##################################
+    ####################################
+    #### 1.3.4 - LoadEnemyResources ####
+    ####################################
     def LoadEnemyResources(self):
         """
         Loads enemy resources
@@ -152,30 +195,9 @@ class Resources():
             Configs['Images'] = Images
 
 
-    #################################
-    #### 1.6 - LoadGameResources ####
-    #################################
-    def LoadGameResources(self):
-        """
-        Loads resources for game class
-        """
-
-        # Load loading image
-        
-        # Image path relative to this file
-        ImagePath = "Images/Game/Loading.png"
-
-        # Load from absolute path, remove background and scale
-        Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
-        Image = pygame.transform.scale(Image, GameConfigs['ScreenDimensions'])
-
-        # Save image
-        GameConfigs['LoadingImage'] = Image
-
-
-    ##################################
-    #### 1.7 - LoadLevelResources ####
-    ##################################
+    ####################################
+    #### 1.3.5 - LoadLevelResources ####
+    ####################################
     def LoadLevelResources(self):
         """
         Loads resources for level class
@@ -266,19 +288,10 @@ class Resources():
         # Save image
         LevelConfigs['SidebarTexture'] = Image
 
-        ########################################
-        #### Load Remaining Level Resources ####
-        ########################################
 
-        self.LoadEnemyResources()
-        self.LoadProjectileResources()
-        self.LoadArcherResources()
-        self.LoadTowerResources()
-
-    
-    #######################################
-    #### 1.8 - LoadProjectileResources ####
-    #######################################
+    #########################################
+    #### 1.3.6 - LoadProjectileResources ####
+    #########################################
     def LoadProjectileResources(self):
         """
         Loads projectile resources
@@ -298,9 +311,37 @@ class Resources():
             Configs['Image'] = Image
 
 
-    ##################################
-    #### 1.9 - LoadTowerResources ####
-    ##################################
+    ###################################
+    #### 1.3.7 - LoadTileResources ####
+    ###################################
+    def LoadTileResources(self):
+        """
+        Loads tile resources
+        """
+
+        DefaultConfigs = TileConfigs['Default']
+        ImageDimensions = DefaultConfigs['ImageDimensions']
+
+        # Load Tile Images
+        for Name, Configs in TileConfigs.items():
+
+            if Name is not 'Default':
+            
+                # Image path relative to this file
+                ImagePath = "Images/Editor/Tiles/" + Name + ".png"
+
+                # Load from absolute path and scale
+                Image = pygame.image.load(os.path.join(os.path.dirname(__file__), ImagePath)).convert_alpha()
+                Image = pygame.transform.scale(Image, ImageDimensions)
+
+                # Save image
+                Configs['Image'] = Image
+
+    
+
+    ####################################
+    #### 1.3.8 - LoadTowerResources ####
+    ####################################
     def LoadTowerResources(self):
         """
         Loads tower resources
